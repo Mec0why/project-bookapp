@@ -23,6 +23,10 @@
     },
   };
 
+  const classNames = {
+    favouriteBook: 'favorite',
+  };
+
   const templates = {
     book: Handlebars.compile(
       document.querySelector(select.templateOf.book).innerHTML
@@ -37,6 +41,8 @@
       thisBook.data = data;
 
       thisBook.renderInMenu();
+      thisBook.getElements();
+      thisBook.initActions();
     }
 
     renderInMenu() {
@@ -49,6 +55,24 @@
       const bookContainer = document.querySelector(select.containerOf.book);
 
       bookContainer.appendChild(thisBook.element);
+    }
+
+    getElements() {
+      const thisBook = this;
+
+      thisBook.bookFavourite = thisBook.element.querySelector(
+        select.book.coverImage
+      );
+    }
+
+    initActions() {
+      const thisBook = this;
+
+      thisBook.element.addEventListener('dblclick', function (event) {
+        event.preventDefault();
+
+        thisBook.bookFavourite.classList.toggle(classNames.favouriteBook);
+      });
     }
   }
 
