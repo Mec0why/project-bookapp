@@ -80,15 +80,12 @@
       thisBook.bookFavorite.addEventListener('dblclick', function (event) {
         event.preventDefault();
 
-        thisBook.bookFavorite.classList.toggle(classNames.favoriteBook);
+        const book = event.target.offsetParent;
+        book.classList.toggle(classNames.favoriteBook);
 
         const dataId = thisBook.data.id;
 
-        if (
-          thisBook.bookFavorite.classList.value.includes(
-            classNames.favoriteBook
-          )
-        ) {
+        if (book.classList.value.includes(classNames.favoriteBook)) {
           favoriteBooksList.push(dataId);
           //console.log(favoriteBooksList);
         } else {
