@@ -41,7 +41,7 @@
   const favoriteBooksList = [];
   const filters = [];
 
-  class Book {
+  class BookList {
     constructor(id, data) {
       const thisBook = this;
 
@@ -155,16 +155,12 @@
 
       if (rating < 6) {
         ratingBgc = 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
-        //console.log(ratingBgc);
       } else if (rating > 6 && rating <= 8) {
         ratingBgc = 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
-        //console.log(ratingBgc);
       } else if (rating > 8 && rating <= 9) {
         ratingBgc = 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
-        //console.log(ratingBgc);
       } else if (rating > 9) {
         ratingBgc = 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
-        //console.log(ratingBgc);
       }
       return ratingBgc;
     }
@@ -175,7 +171,10 @@
       const thisApp = this;
 
       for (let bookData in thisApp.data.books) {
-        new Book(thisApp.data.books[bookData].id, thisApp.data.books[bookData]);
+        new BookList(
+          thisApp.data.books[bookData].id,
+          thisApp.data.books[bookData]
+        );
       }
     },
 
