@@ -14,6 +14,7 @@
     },
     containerOf: {
       books: '.books-list',
+      filters: '.filters',
     },
     element: {
       dataId: 'data-id',
@@ -28,6 +29,7 @@
 
   const classNames = {
     favoriteBook: 'favorite',
+    hidden: 'hidden',
   };
 
   const templates = {
@@ -37,6 +39,7 @@
   };
 
   const favoriteBooksList = [];
+  const filters = [];
 
   class Book {
     constructor(id, data) {
@@ -68,6 +71,8 @@
       thisBook.bookFavorite = thisBook.element.querySelector(
         select.book.coverImage
       );
+
+      thisBook.filters = document.querySelector(select.containerOf.filters);
     }
 
     initActions() {
@@ -94,6 +99,49 @@
           //console.log(favoriteBooksList);
         }
       });
+
+      thisBook.filters.addEventListener('click', function (event) {
+        const filter = event.target;
+        console.log(filter);
+        if (
+          filter.getAttribute('type') === 'checkbox' &&
+          filter.getAttribute('name') === 'filter'
+        ) {
+          if (filter.checked) {
+            filters.push(filter.value);
+            thisBook.filterBooks();
+          } else if (!filter.checked) {
+            const filterId = filters.indexOf(filter.value);
+            filters.splice(filterId, 1);
+            thisBook.filterBooks();
+          }
+        }
+      });
+    }
+
+    filterBooks() {
+      const books = dataSource.books;
+      const bookList = [];
+
+      for (let book of books) {
+        for (const filter of filters) {
+          if (!book.details[filter]) {
+            bookList.push(book.id);
+          }
+        }
+
+        if (bookList.includes(book.id)) {
+          const bookImage = document.querySelector(
+            '[data-id="' + book.id + '"]'
+          );
+          bookImage.classList.add(classNames.hidden);
+        } else if (!bookList.includes(book.id)) {
+          const bookImage = document.querySelector(
+            '[data-id="' + book.id + '"]'
+          );
+          bookImage.classList.remove(classNames.hidden);
+        }
+      }
     }
   }
 
