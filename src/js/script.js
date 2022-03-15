@@ -13,7 +13,10 @@
       ratings: '.book__rating',
     },
     containerOf: {
-      book: '.books-list',
+      books: '.books-list',
+    },
+    element: {
+      dataId: 'data-id',
     },
   };
 
@@ -24,7 +27,7 @@
   };
 
   const classNames = {
-    favouriteBook: 'favorite',
+    favoriteBook: 'favorite',
   };
 
   const templates = {
@@ -32,6 +35,8 @@
       document.querySelector(select.templateOf.book).innerHTML
     ),
   };
+
+  const favoriteBooksList = [];
 
   class Book {
     constructor(id, data) {
@@ -52,15 +57,15 @@
 
       thisBook.element = utils.createDOMFromHTML(generatedHTML);
 
-      const bookContainer = document.querySelector(select.containerOf.book);
+      const booksContainer = document.querySelector(select.containerOf.books);
 
-      bookContainer.appendChild(thisBook.element);
+      booksContainer.appendChild(thisBook.element);
     }
 
     getElements() {
       const thisBook = this;
 
-      thisBook.bookFavourite = thisBook.element.querySelector(
+      thisBook.bookFavorite = thisBook.element.querySelector(
         select.book.coverImage
       );
     }
@@ -68,10 +73,29 @@
     initActions() {
       const thisBook = this;
 
-      thisBook.element.addEventListener('dblclick', function (event) {
+      thisBook.bookFavorite.addEventListener('click', function (event) {
+        event.preventDefault();
+      });
+
+      thisBook.bookFavorite.addEventListener('dblclick', function (event) {
         event.preventDefault();
 
-        thisBook.bookFavourite.classList.toggle(classNames.favouriteBook);
+        thisBook.bookFavorite.classList.toggle(classNames.favoriteBook);
+
+        const dataId = thisBook.data.id;
+
+        if (
+          thisBook.bookFavorite.classList.value.includes(
+            classNames.favoriteBook
+          )
+        ) {
+          favoriteBooksList.push(dataId);
+          //console.log(favoriteBooksList);
+        } else {
+          const removeDataId = favoriteBooksList.indexOf(dataId);
+          favoriteBooksList.splice(removeDataId, 1);
+          //console.log(favoriteBooksList);
+        }
       });
     }
   }
