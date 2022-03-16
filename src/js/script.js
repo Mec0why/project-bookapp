@@ -21,12 +21,6 @@
     },
   };
 
-  const settings = {
-    amountRating: {
-      defaultValue: 1,
-    },
-  };
-
   const classNames = {
     favoriteBook: 'favorite',
     hidden: 'hidden',
@@ -38,41 +32,44 @@
     ),
   };
 
-  const favoriteBooksList = [];
+  /* const favoriteBooksList = [];
+  const filters = []; */
   const filters = [];
 
   class BookList {
-    constructor(id, data) {
+    constructor() {
       const thisBook = this;
 
-      thisBook.id = id;
-      thisBook.data = data;
-
-      thisBook.renderInMenu();
+      thisBook.initData();
       thisBook.getElements();
       thisBook.determineRatingBgc();
       thisBook.initActions();
     }
 
-    renderInMenu() {
+    initData() {
       const thisBook = this;
 
-      thisBook.data.ratingBgc = thisBook.determineRatingBgc(
-        thisBook.data.rating
-      );
-      thisBook.data.ratingWidth = thisBook.data.rating * 10;
+      thisBook.data = dataSource.books;
 
-      const generatedHTML = templates.book(thisBook.data);
+      for (let book of thisBook.data) {
+        const thisBook = this;
+        book.ratingBgc = thisBook.determineRatingBgc(book.rating);
+        book.ratingWidth = book.rating * 10;
 
-      thisBook.element = utils.createDOMFromHTML(generatedHTML);
+        const generatedHTML = templates.book(book);
 
-      const booksContainer = document.querySelector(select.containerOf.books);
+        thisBook.element = utils.createDOMFromHTML(generatedHTML);
 
-      booksContainer.appendChild(thisBook.element);
+        const bookContainer = document.querySelector(select.containerOf.books);
+
+        bookContainer.appendChild(thisBook.element);
+      }
     }
 
     getElements() {
       const thisBook = this;
+
+      thisBook.container = document.querySelector(select.containerOf.books);
 
       thisBook.bookFavorite = thisBook.element.querySelector(
         select.book.coverImage
@@ -84,30 +81,33 @@
     initActions() {
       const thisBook = this;
 
-      thisBook.bookFavorite.addEventListener('click', function (event) {
+      const favoriteBooksList = [];
+
+      thisBook.container.addEventListener('click', function (event) {
         event.preventDefault();
       });
 
-      thisBook.bookFavorite.addEventListener('dblclick', function (event) {
+      thisBook.container.addEventListener('dblclick', function (event) {
         event.preventDefault();
 
-        const book = event.target.offsetParent;
-        book.classList.toggle(classNames.favoriteBook);
+        const clickBook = event.target.offsetParent;
+        clickBook.classList.toggle(classNames.favoriteBook);
 
-        const dataId = thisBook.data.id;
+        const dataId = clickBook.dataset.id;
 
-        if (book.classList.value.includes(classNames.favoriteBook)) {
+        if (clickBook.classList.value.includes(classNames.favoriteBook)) {
           favoriteBooksList.push(dataId);
-          //console.log(favoriteBooksList);
+          console.log(favoriteBooksList);
         } else {
           const removeDataId = favoriteBooksList.indexOf(dataId);
           favoriteBooksList.splice(removeDataId, 1);
-          //console.log(favoriteBooksList);
+          console.log(favoriteBooksList);
         }
       });
 
       thisBook.filters.addEventListener('click', function (event) {
         const filter = event.target;
+
         console.log(filter);
         if (
           filter.getAttribute('type') === 'checkbox' &&
@@ -166,7 +166,7 @@
     }
   }
 
-  const app = {
+  /*const app = {
     initBook: function () {
       const thisApp = this;
 
@@ -193,7 +193,7 @@
 
       thisApp.initData();
     },
-  };
+  };*/
 
-  app.init();
+  const app = new BookList();
 }
