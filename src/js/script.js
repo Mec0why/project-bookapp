@@ -32,14 +32,11 @@
     ),
   };
 
-  /* const favoriteBooksList = [];
-  const filters = []; */
-  const filters = [];
-
   class BookList {
     constructor() {
       const thisBook = this;
 
+      thisBook.filters = [];
       thisBook.initData();
       thisBook.getElements();
       thisBook.determineRatingBgc();
@@ -75,7 +72,9 @@
         select.book.coverImage
       );
 
-      thisBook.filters = document.querySelector(select.containerOf.filters);
+      thisBook.dom = {};
+
+      thisBook.dom.filters = document.querySelector(select.containerOf.filters);
     }
 
     initActions() {
@@ -105,7 +104,7 @@
         }
       });
 
-      thisBook.filters.addEventListener('click', function (event) {
+      thisBook.dom.filters.addEventListener('click', function (event) {
         const filter = event.target;
 
         console.log(filter);
@@ -114,23 +113,23 @@
           filter.getAttribute('name') === 'filter'
         ) {
           if (filter.checked) {
-            filters.push(filter.value);
-            thisBook.filterBooks();
+            thisBook.filters.push(filter.value);
           } else if (!filter.checked) {
-            const filterId = filters.indexOf(filter.value);
-            filters.splice(filterId, 1);
-            thisBook.filterBooks();
+            const filterId = thisBook.filters.indexOf(filter.value);
+            thisBook.filters.splice(filterId, 1);
           }
+          thisBook.filterBooks();
         }
       });
     }
 
     filterBooks() {
+      const thisBook = this;
       const books = dataSource.books;
       const bookList = [];
 
       for (let book of books) {
-        for (const filter of filters) {
+        for (const filter of thisBook.filters) {
           if (!book.details[filter]) {
             bookList.push(book.id);
           }
@@ -166,34 +165,6 @@
     }
   }
 
-  /*const app = {
-    initBook: function () {
-      const thisApp = this;
-
-      for (let bookData in thisApp.data.books) {
-        new BookList(
-          thisApp.data.books[bookData].id,
-          thisApp.data.books[bookData]
-        );
-      }
-    },
-
-    initData: function () {
-      const thisApp = this;
-      thisApp.data = dataSource;
-      thisApp.initBook();
-    },
-
-    init: function () {
-      const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
-
-      thisApp.initData();
-    },
-  };*/
-
   const app = new BookList();
+  console.log(app);
 }
